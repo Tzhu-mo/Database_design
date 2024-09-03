@@ -1,0 +1,163 @@
+create table book
+(
+       bno varchar2(10),
+       bname varchar2(30),
+       author varchar2(30),
+       categories varchar2(30),
+       press varchar2(30),
+       primary key (bno)
+);
+create table supplier
+(
+       sno varchar2(10),
+       sname varchar2(30),
+       saddress varchar2(10),
+       sphone varchar2(30),
+       primary key (sno)
+);
+create table purorder
+(
+       purno varchar2(10),
+       bno varchar2(10),
+       sno varchar2(10),
+       purnum number,
+       purtime date,
+       purprice number,
+       primary key (purno,bno,sno),
+       foreign key(bno)references book(bno),
+       foreign key(sno)references supplier(sno),
+       check(purnum >0),
+       check(purprice>0)
+);
+create table entry
+(
+       rno varchar2(10),
+       bno varchar2(10),
+       sno varchar2(10),
+       receiptnum number,
+       primary key (rno,bno,sno),
+       foreign key(bno)references book(bno),
+       foreign key(sno)references supplier(sno),
+       check(receiptnum >0)
+);
+create table inventory
+(
+       bno varchar2(10),
+       sno varchar2(10),
+       invnum number, 
+       primary key (bno,sno),
+       foreign key(bno)references book(bno),
+       foreign key(sno)references supplier(sno),
+       check(invnum >0)
+);
+create table outorder
+(
+       outstno varchar2(10),
+       bno varchar2(10),
+       outstnum number,
+       primary key(outstno,bno),
+       foreign key(bno)references book(bno),
+       check(outstnum >0)
+);
+create table inventorylist
+(
+       ino varchar2(10),
+       bno varchar2(10),
+       actualnum number,
+       primary key(ino,bno),
+       foreign key(bno)references book(bno),
+       check(actualnum >0)
+);
+create table customer
+(
+       cno varchar2(10),
+       cname varchar2(30),
+       cphone varchar2(30),
+       camount number,
+       primary key(cno),
+       check(camount >= 0)
+);
+create table members
+(
+       vno varchar2(10),
+       cno varchar2(10),
+       registtime date,
+       vdiscount number,
+       vlevel number,
+       primary key(vno,cno),
+       foreign key(cno)references customer(cno),
+       check(vdiscount >= 0),
+       check(vlevel >= 0)
+);
+create table salesslip
+(
+       salesno varchar2(10),
+       bno varchar2(10),
+       cno varchar2(10),
+       price number,
+       salesnum number,
+       salestime date,
+       primary key(salesno,bno,cno),
+       foreign key(bno)references book(bno),
+       foreign key(cno)references customer(cno),
+       check(price >= 0)
+);
+create table returnorder
+(
+       retno varchar2(10),
+       salesno varchar2(10),
+       bno varchar2(10),
+       cno varchar2(10),
+       applitime date,
+       primary key(salesno,bno,cno),
+       foreign key(salesno,bno,cno)references salesslip(salesno,bno,cno)
+);
+create table outbound
+(
+       delno varchar2(10),
+       bno varchar2(10),
+       outboundnum number,
+       primary key(delno,bno),
+       foreign key(bno)references book(bno),
+       check(outboundnum >= 0)
+);
+create table shelves
+(
+       sheno varchar2(10),
+       bno varchar2(10),
+       shegoodsnum number,
+       pricetag number,
+       primary key(sheno,bno),
+       foreign key(bno)references book(bno),
+       check(shegoodsnum >= 0),
+       check(pricetag >= 0)
+);
+create table activity
+(
+       pno varchar2(10),
+       pname varchar2(30),
+       statime date,
+       tertime date,
+       primary key(pno)
+);
+create table sphere
+(
+       pno varchar2(10),
+       bno varchar2(10),
+       pdiscount number,
+       minaccount number,
+       primary key(pno,bno),
+       foreign key(bno)references book(bno),
+       check(pdiscount >= 0),
+       check(minaccount >= 0)
+);
+create table bestseller
+(
+       bestno varchar2(10),
+       bno varchar2(10),
+       bestsum number,
+       bestdate varchar2(10),
+       primary key(bestno,bno),
+       foreign key(bno)references book(bno),
+       check(bestsum >= 0)
+);

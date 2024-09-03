@@ -1,0 +1,15 @@
+create or replace procedure pur_ruku(v_rno in entry.rno%type,v_bno in book.bno%type,v_sno in supplier.sno%type,v_receiptnum in entry.receiptnum%type) is
+
+begin
+  insert into entry
+  values(v_rno,v_bno,v_sno,v_receiptnum);
+  
+  update inventory
+  set invnum = v_receiptnum + invnum
+  where inventory.bno = v_bno and inventory.sno = v_sno;
+  
+  update outorder
+  set outstnum = outstnum - v_receiptnum
+  where outorder.bno = v_bno;
+end pur_ruku;
+/
